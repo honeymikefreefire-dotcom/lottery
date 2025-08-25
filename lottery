@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YOU ARE HACKED</title>
+  <style>
+    :root {
+      --bg:#000; --fg:#00ff8a; --accent:#ff3b3b;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body {
+      margin:0; background: radial-gradient(1000px 600px at 50% -10%, rgba(0,255,140,.15), transparent 60%), var(--bg);
+      color:#e8fff2; display:grid; place-items:center; overflow:hidden;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .scan { position:fixed; inset:0; background:linear-gradient(transparent 95%, rgba(0,255,140,.15) 95%), linear-gradient(90deg, rgba(0,255,140,.05) 1px, transparent 1px);
+            background-size: 100% 4px, 40px 100%; mix-blend-mode: screen; pointer-events:none; }
+    .wrap { text-align:center; max-width: 900px; padding: 24px }
+    h1 {
+      font-size: clamp(38px, 8vw, 120px); margin: 0 0 10px; line-height: .9;
+      letter-spacing: 2px; text-shadow: 0 0 8px rgba(0,255,140,.8);
+      position: relative;
+    }
+    /* glitch layers */
+    h1::before, h1::after {
+      content: "YOU ARE HACKED"; position: absolute; left: 0; right: 0; top: 0;
+    }
+    h1::before { color: #00e1ff; transform: translateX(-2px); mix-blend-mode: screen; }
+    h1::after  { color: var(--accent); transform: translateX(2px);  mix-blend-mode: screen; }
+    p { margin: 0.3rem 0; opacity: .85 }
+    .blink { animation: blink 1s steps(1) infinite }
+    @keyframes blink { 50% { opacity: 0 } }
+
+    .btns { margin-top: 20px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap }
+    a.btn {
+      color: #001; background: var(--fg); text-decoration: none; padding: 10px 14px; border-radius: 10px; font-weight: 700;
+    }
+    .sub { color:#8cffc0; margin-top: 6px; font-size: 14px }
+    /* optional full-screen flash effect */
+    .flash { position:fixed; inset:0; background:#0f0; opacity:0; pointer-events:none; }
+  </style>
+</head>
+<body>
+  <div class="flash" id="flash"></div>
+  <div class="scan" aria-hidden="true"></div>
+  <div class="wrap" role="main" aria-label="Prank message">
+    <h1>YOU ARE HACKED</h1>
+    <p>> system breach detected<span class="blink">_</span></p>
+    <p class="sub">(Relax — this is a demo/prank page. No data is collected.)</p>
+    <div class="btns">
+      <a class="btn" href="index.html">Go Back</a>
+      <a class="btn" href="#" id="fsBtn" title="Toggle Fullscreen">Toggle Fullscreen</a>
+    </div>
+  </div>
+
+  <script>
+    // quick green flash when page loads
+    const flash = document.getElementById('flash');
+    requestAnimationFrame(() => {
+      flash.style.transition = 'opacity .35s ease-out';
+      flash.style.opacity = '0.3';
+      setTimeout(() => flash.style.opacity = '0', 60);
+    });
+
+    // optional: let user toggle fullscreen for dramatic effect
+    const fsBtn = document.getElementById('fsBtn');
+    fsBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const d = document.documentElement;
+      if (!document.fullscreenElement) d.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    });
+
+    // tiny beep (web audio) for extra drama – volume is low
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const o = ctx.createOscillator(); const g = ctx.createGain();
+      o.type = 'square'; o.frequency.value = 440; g.gain.value = 0.02;
+      o.connect(g); g.connect(ctx.destination); o.start();
+      setTimeout(()=>{ o.stop(); ctx.close(); }, 120);
+    } catch {}
+  </script>
+</body>
+</html>
